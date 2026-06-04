@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indroid | Praveen Kumar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            user-select: none;
+            overflow: hidden;
+        }
+        .terminal-text {
+            font-family: 'Fira Code', monospace;
+        }
+        .glassmorphism {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .window-shadow {
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5);
+        }
+        /* Custom dynamic desktop grid grid positioning */
+        .desktop-grid {
+            display: grid;
+            grid-template-rows: repeat(auto-fill, minmax(90px, 1fr));
+            grid-auto-flow: column;
+            align-content: start;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+        }
+        .context-menu {
+            position: fixed;
+            z-index: 999999;
+            min-width: 200px;
+            padding: 4px 0;
+            border-radius: 10px;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
+            display: none;
+        }
+        .context-menu.visible { display: block; }
+        .ctx-item {
+            width: 100%;
+            text-align: left;
+            padding: 7px 14px;
+            font-size: 12px;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.12s;
+        }
+        .ctx-item:hover { background: rgba(255, 255, 255, 0.1); }
+        .ctx-item.disabled { opacity: 0.45; pointer-events: none; }
+        .ctx-sep { height: 1px; background: rgba(255, 255, 255, 0.08); margin: 4px 8px; }
+        .ctx-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #64748b;
+            padding: 6px 14px 2px;
+        }
+        .desktop-icon.selected > div:first-child {
+            outline: 2px solid rgba(99, 102, 241, 0.7);
+            outline-offset: 2px;
+        }
+        #calendly-embed { min-height: 520px; }
+
+        /* macOS-style boot splash */
+        #boot-splash {
+            position: fixed;
+            inset: 0;
+            z-index: 99999999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #2b2b2e 0%, #1c1c1e 45%, #141416 100%);
+            transition: opacity 0.65s ease, visibility 0.65s ease;
+        }
+        #boot-splash.boot-fade-out {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .boot-logo-wrap {
+            animation: boot-breathe 2.2s ease-in-out infinite;
+        }
+        @keyframes boot-breathe {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.03); opacity: 0.92; }
+        }
+        .boot-logo {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            object-position: center;
+            filter: drop-shadow(0 16px 40px rgba(0, 0, 0, 0.5));
+        }
+        .boot-brand {
+            margin-top: 18px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.55);
+        }
+        .boot-progress-track {
+            width: 200px;
+            height: 5px;
+            margin-top: 42px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+        .boot-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #fff;
+            border-radius: 99px;
+            transition: width 0.35s ease;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.35);
+        }
+        .boot-status {
+            margin-top: 14px;
+            font-size: 11px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.38);
+            min-height: 16px;
+            letter-spacing: 0.02em;
+        }
+        body.splash-active > header,
+        body.splash-active > main,
+        body.splash-active > nav,
+        body.splash-active > #context-menu {
+            visibility: hidden;
+        }
+    </style>
+    <link rel="preload" href="assets/logo.jpg" as="image">
+</head>
+<body class="splash-active h-screen w-screen bg-slate-950 text-slate-200 relative bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2560&auto=format&fit=crop');">
+
+    <div id="boot-splash" aria-live="polite" aria-label="Loading Indroid">
+        <div class="boot-logo-wrap">
+            <img src="assets/logo.jpg" alt="Indroid" class="boot-logo" width="120" height="120">
+        </div>
+        <p class="boot-brand">Indroid</p>
+        <div class="boot-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="boot-progress-track">
+            <div id="boot-progress-bar" class="boot-progress-bar"></div>
+        </div>
+        <p id="boot-status" class="boot-status">Starting up…</p>
+    </div>
+
+    <header class="w-full h-8 glassmorphism text-xs font-medium px-4 flex items-center justify-between fixed top-0 left-0 z-[99999] border-b border-white/5">
+        <div class="flex items-center space-x-4">
+            <span class="font-bold text-white tracking-wide">INDROID</span>
+            <span class="opacity-60 hidden sm:inline">File</span>
+            <span class="opacity-60 hidden sm:inline">Edit</span>
+            <span class="opacity-60 hidden sm:inline">Metrics</span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <span class="flex items-center gap-1.5 text-emerald-400"><span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span> PM Core Active</span>
+            <span id="os-clock" class="font-semibold text-white">10:00 PM</span>
+        </div>
+    </header>
+
+    <div id="context-menu" class="context-menu glassmorphism border border-white/10" role="menu" aria-hidden="true"></div>
+
+    <main id="desktop-surface" class="w-full h-full pt-12 pb-24 px-4 relative">
+        
+        <div class="desktop-grid w-32 h-full gap-4 pt-4 text-center">
+            <div data-open="win-about" data-label="About Me" class="desktop-icon flex flex-col items-center justify-center p-2 rounded-xl cursor-pointer hover:bg-white/10 group transition border border-transparent hover:border-white/5 w-24 h-24" ondblclick="focusOrOpen('win-about')">
+                <div class="w-12 h-12 bg-gradient-to-tr from-purple-600 to-pink-500 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                    <i class="far fa-user text-white text-xl"></i>
+                </div>
+                <span class="text-[11px] font-medium text-white mt-2 drop-shadow-md truncate w-full">About Me</span>
+            </div>
+
+            <div data-open="win-portfolio" data-label="Portfolio" class="desktop-icon flex flex-col items-center justify-center p-2 rounded-xl cursor-pointer hover:bg-white/10 group transition border border-transparent hover:border-white/5 w-24 h-24" ondblclick="focusOrOpen('win-portfolio')">
+                <div class="w-12 h-12 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                    <i class="far fa-folder text-white text-xl"></i>
+                </div>
+                <span class="text-[11px] font-medium text-white mt-2 drop-shadow-md truncate w-full">Portfolio</span>
+            </div>
+
+            <div data-open="win-terminal" data-label="Terminal" class="desktop-icon flex flex-col items-center justify-center p-2 rounded-xl cursor-pointer hover:bg-white/10 group transition border border-transparent hover:border-white/5 w-24 h-24" ondblclick="focusOrOpen('win-terminal')">
+                <div class="w-12 h-12 bg-slate-900 border border-white/10 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform terminal-text text-amber-400 text-xs font-bold">
+                    &gt;_
+                </div>
+                <span class="text-[11px] font-medium text-white mt-2 drop-shadow-md truncate w-full">Terminal</span>
+            </div>
+
+            <div data-action="resume" data-label="Resume.pdf" class="desktop-icon flex flex-col items-center justify-center p-2 rounded-xl cursor-pointer hover:bg-white/10 group transition border border-transparent hover:border-white/5 w-24 h-24" ondblclick="openResume()">
+                <div class="w-12 h-12 bg-gradient-to-tr from-rose-600 to-orange-500 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                    <i class="far fa-file-pdf text-white text-xl"></i>
+                </div>
+                <span class="text-[11px] font-medium text-white mt-2 drop-shadow-md truncate w-full">Resume.pdf</span>
+            </div>
+
+            <div data-action="spotify" data-label="Arijit Singh" class="desktop-icon flex flex-col items-center justify-center p-2 rounded-xl cursor-pointer hover:bg-white/10 group transition border border-transparent hover:border-white/5 w-24 h-24" ondblclick="openSpotify()">
+                <div class="w-12 h-12 bg-gradient-to-tr from-emerald-600 to-green-500 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                    <i class="fab fa-spotify text-white text-xl"></i>
+                </div>
+                <span class="text-[11px] font-medium text-white mt-2 drop-shadow-md truncate w-full">Arijit Singh</span>
+            </div>
+
+            <div data-action="linkedin" data-label="LinkedIn" class="desktop-icon flex flex-col items-center justify-center p-2 rounded-xl cursor-pointer hover:bg-white/10 group transition border border-transparent hover:border-white/5 w-24 h-24" ondblclick="openLinkedIn()">
+                <div class="w-12 h-12 bg-[#0A66C2] rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform border border-blue-400/30">
+                    <i class="fab fa-linkedin-in text-white text-xl"></i>
+                </div>
+                <span class="text-[11px] font-medium text-white mt-2 drop-shadow-md truncate w-full">LinkedIn</span>
+            </div>
+
+            <div data-action="call" data-label="1:1 Call" class="desktop-icon flex flex-col items-center justify-center p-2 rounded-xl cursor-pointer hover:bg-white/10 group transition border border-transparent hover:border-white/5 w-24 h-24" ondblclick="openCall()">
+                <div class="w-12 h-12 bg-gradient-to-tr from-violet-600 to-fuchsia-500 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform border border-violet-400/30">
+                    <i class="fas fa-video text-white text-lg"></i>
+                </div>
+                <span class="text-[11px] font-medium text-white mt-2 drop-shadow-md truncate w-full">1:1 Call</span>
+            </div>
+        </div>
+
+        <div id="win-about" class="window absolute top-16 left-36 w-[360px] glassmorphism rounded-xl window-shadow flex flex-col overflow-hidden border border-white/10" style="z-index: 10;">
+            <div class="window-header h-10 px-4 flex items-center justify-between cursor-move bg-slate-950/40 border-b border-white/5">
+                <div class="flex items-center space-x-2">
+                    <button onclick="closeWindow('win-about', event)" class="w-3 h-3 rounded-full bg-rose-500 hover:bg-rose-600 text-[8px] text-rose-950 font-bold flex items-center justify-center">×</button>
+                    <button onclick="hideWindow('win-about', event)" class="w-3 h-3 rounded-full bg-amber-500 hover:bg-amber-600 text-[8px] text-amber-950 font-bold flex items-center justify-center">-</button>
+                    <button class="w-3 h-3 rounded-full bg-emerald-500/40 cursor-not-allowed"></button>
+                </div>
+                <span class="text-xs font-semibold text-slate-300 select-none"><i class="far fa-user-circle mr-1.5 text-purple-400"></i>About Praveen</span>
+                <div class="w-12"></div>
+            </div>
+            <div class="p-5 overflow-y-auto max-h-[420px] select-text">
+                <div class="flex items-center space-x-4 mb-4">
+                    <img src="assets/praveen.png" alt="Praveen Kumar" class="w-16 h-16 rounded-full border-2 border-indigo-400 object-cover object-top shadow-lg ring-2 ring-indigo-500/20">
+                    <div>
+                        <h2 class="text-base font-bold text-white">Praveen Kumar</h2>
+                        <p class="text-[11px] text-indigo-400 font-mono tracking-wider uppercase">Technical Product Manager</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Ex-Cybersecurity · Product & Growth</p>
+                    </div>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                    I build products where security rigor meets user empathy — from threat-aware roadmaps to retention experiments backed by data. This is Indroid, my interactive portfolio desktop: open my resume, explore case studies, or queue Arijit Singh while you read.
+                </p>
+                <div class="border-t border-white/5 pt-3 space-y-1.5 text-xs mb-3">
+                    <div class="flex justify-between gap-2"><span class="text-slate-500 shrink-0">Focus</span><span class="text-slate-300 text-right">AI/SaaS, Growth PM, Security</span></div>
+                    <div class="flex justify-between gap-2"><span class="text-slate-500 shrink-0">Strengths</span><span class="text-slate-300 text-right">Discovery, Metrics, Stakeholder narrative</span></div>
+                    <div class="flex justify-between gap-2"><span class="text-slate-500 shrink-0">Status</span><span class="text-emerald-400 font-medium flex items-center justify-end gap-1"><span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span> Open to PM roles</span></div>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button type="button" onclick="openResume()" class="flex-1 min-w-[45%] text-[11px] py-2 rounded-lg bg-rose-500/20 text-rose-200 border border-rose-500/30 hover:bg-rose-500/30 transition"><i class="far fa-file-pdf mr-1"></i> Resume</button>
+                    <button type="button" onclick="openCall()" class="flex-1 min-w-[45%] text-[11px] py-2 rounded-lg bg-violet-500/20 text-violet-200 border border-violet-500/30 hover:bg-violet-500/30 transition"><i class="fas fa-video mr-1"></i> 1:1 Call</button>
+                    <button type="button" onclick="openSpotify()" class="w-full text-[11px] py-2 rounded-lg bg-emerald-500/20 text-emerald-200 border border-emerald-500/30 hover:bg-emerald-500/30 transition"><i class="fab fa-spotify mr-1"></i> Music</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="win-portfolio" class="window absolute top-28 left-[450px] w-[420px] glassmorphism rounded-xl window-shadow flex flex-col overflow-hidden border border-white/10" style="z-index: 15;">
+            <div class="window-header h-10 px-4 flex items-center justify-between cursor-move bg-slate-950/40 border-b border-white/5">
+                <div class="flex items-center space-x-2">
+                    <button onclick="closeWindow('win-portfolio', event)" class="w-3 h-3 rounded-full bg-rose-500 hover:bg-rose-600 text-[8px] text-rose-950 font-bold flex items-center justify-center">×</button>
+                    <button onclick="hideWindow('win-portfolio', event)" class="w-3 h-3 rounded-full bg-amber-500 hover:bg-amber-600 text-[8px] text-amber-950 font-bold flex items-center justify-center">-</button>
+                    <button class="w-3 h-3 rounded-full bg-emerald-500/40 cursor-not-allowed"></button>
+                </div>
+                <span class="text-xs font-semibold text-slate-300 select-none"><i class="far fa-folder-open mr-1.5 text-blue-400"></i>Portfolio Drive</span>
+                <div class="w-12"></div>
+            </div>
+            <div class="flex min-h-[280px]">
+                <div class="w-1/3 bg-slate-950/30 border-r border-white/5 p-3 space-y-1 text-[11px]">
+                    <span class="text-[9px] uppercase tracking-wider text-slate-600 font-bold px-1.5 block mb-1">Navigation</span>
+                    <button class="w-full text-left bg-white/5 text-white px-2 py-1.5 rounded-lg flex items-center gap-2"><i class="fas fa-hdd text-blue-400"></i> Drive Root</button>
+                    <button onclick="focusOrOpen('win-teardown')" class="w-full text-left hover:bg-white/5 text-slate-400 hover:text-slate-200 px-2 py-1.5 rounded-lg transition flex items-center gap-2"><i class="fab fa-spotify text-emerald-400"></i> Teardowns</button>
+                    <button onclick="openSpotify()" class="w-full text-left hover:bg-white/5 text-slate-400 hover:text-slate-200 px-2 py-1.5 rounded-lg transition flex items-center gap-2"><i class="fas fa-music text-pink-400"></i> Now Playing</button>
+                </div>
+                <div class="w-2/3 p-4 grid grid-cols-2 gap-4 items-start content-start">
+                    <div onclick="focusOrOpen('win-teardown')" class="flex flex-col items-center text-center group cursor-pointer p-2 rounded-lg hover:bg-white/5 border border-transparent hover:border-white/5 transition">
+                        <i class="fas fa-file-invoice text-emerald-400 text-3xl mb-1.5 group-hover:scale-105 transition-transform"></i>
+                        <span class="text-[11px] text-slate-300 group-hover:text-white truncate w-full">Spotify_Teardown</span>
+                    </div>
+                    <div onclick="openResume()" class="flex flex-col items-center text-center group cursor-pointer p-2 rounded-lg hover:bg-white/5 border border-transparent hover:border-white/5 transition">
+                        <i class="fas fa-file-pdf text-rose-500 text-3xl mb-1.5 group-hover:scale-105 transition-transform"></i>
+                        <span class="text-[11px] text-slate-300 group-hover:text-white truncate w-full">Praveen.pdf</span>
+                    </div>
+                    <div onclick="openSpotify()" class="flex flex-col items-center text-center group cursor-pointer p-2 rounded-lg hover:bg-white/5 transition">
+                        <i class="fab fa-spotify text-emerald-400 text-2xl mb-1"></i>
+                        <span class="text-[11px] text-slate-300">Arijit Singh</span>
+                    </div>
+                    <div onclick="openCall()" class="flex flex-col items-center text-center group cursor-pointer p-2 rounded-lg hover:bg-white/5 border border-violet-500/20 hover:border-violet-500/40 transition">
+                        <i class="fas fa-video text-violet-400 text-2xl mb-1 group-hover:scale-105 transition-transform"></i>
+                        <span class="text-[11px] text-slate-300">Book_1on1</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="win-teardown" class="window absolute top-16 left-[20%] w-[65%] h-[72%] glassmorphism rounded-xl window-shadow flex flex-col overflow-hidden border border-white/10 hidden" style="z-index: 20;">
+            <div class="window-header h-10 px-4 flex items-center justify-between cursor-move bg-slate-950/50 border-b border-white/5">
+                <div class="flex items-center space-x-2">
+                    <button onclick="closeWindow('win-teardown', event)" class="w-3 h-3 rounded-full bg-rose-500 hover:bg-rose-600 text-[8px] text-rose-950 font-bold flex items-center justify-center">×</button>
+                    <button onclick="hideWindow('win-teardown', event)" class="w-3 h-3 rounded-full bg-amber-500 hover:bg-amber-600 text-[8px] text-amber-950 font-bold flex items-center justify-center">-</button>
+                    <button onclick="maximizeWindow('win-teardown', event)" class="w-3 h-3 rounded-full bg-emerald-500 hover:bg-emerald-600 text-[8px] text-emerald-950 font-bold flex items-center justify-center">+</button>
+                </div>
+                <span class="text-xs font-semibold text-slate-300 select-none flex items-center gap-1.5"><i class="fab fa-spotify text-emerald-400"></i> case-study-spotify.md</span>
+                <div class="w-12"></div>
+            </div>
+            <div class="flex-1 overflow-y-auto bg-slate-900/95 text-slate-300 p-6 sm:p-8 text-xs sm:text-sm leading-relaxed max-w-4xl mx-auto w-full">
+                <div class="mb-6 rounded-xl overflow-hidden border border-emerald-500/20 bg-slate-950/80 shadow-inner">
+                    <div class="px-4 py-2 border-b border-white/5 flex items-center justify-between">
+                        <span class="text-[11px] font-semibold text-emerald-400 flex items-center gap-2"><i class="fab fa-spotify"></i> Now playing — Arijit Singh</span>
+                        <button type="button" onclick="openSpotify()" class="text-[10px] text-slate-400 hover:text-white px-2 py-0.5 rounded border border-white/10">Pop out player</button>
+                    </div>
+                    <iframe id="teardown-spotify-embed" title="Arijit Singh playlist" src="https://open.spotify.com/embed/playlist/0Ioc7H1fh4bZ3NnGvaFxVt?utm_source=generator&theme=0" width="100%" height="152" style="border:0;" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">Spotify Retention Optimization Engine</h1>
+                <div class="flex flex-wrap gap-2 items-center text-[11px] text-slate-500 mb-6 border-b border-white/5 pb-3">
+                    <span class="bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 px-2 py-0.5 rounded-full">Growth Strategy</span>
+                    <span class="bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 px-2 py-0.5 rounded-full">D30 Retention metrics</span>
+                </div>
+                <div class="w-full bg-slate-950 rounded-xl p-4 border border-white/5 mb-6 shadow-inner">
+                    <div class="text-[10px] font-bold tracking-wider text-slate-500 uppercase mb-2">Variant-B Testing Sandbox Frame</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="sm:col-span-2 bg-slate-900 rounded-lg border border-white/5 p-3 space-y-2">
+                            <div class="h-2 w-1/3 bg-slate-700 rounded"></div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="h-12 bg-slate-800 rounded p-1.5"><div class="h-1.5 w-1/2 bg-indigo-500/50 rounded"></div></div>
+                                <div class="h-12 bg-slate-800 rounded p-1.5"><div class="h-1.5 w-2/3 bg-emerald-500/50 rounded"></div></div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900 rounded-lg border border-white/5 p-3 flex flex-col justify-center">
+                            <div class="text-[10px] text-slate-500">Day-30 Impact Lift</div>
+                            <div class="text-xl font-black text-emerald-400 mt-0.5">+4.2%</div>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="text-sm font-bold text-white mb-1">Hypothesis Structure</h3>
+                <p class="text-slate-400 mb-4">
+                    Replacing the mandatory multi-step preference matrix with an iterative streaming micro-curator container interface decreases initial drop-off parameters across tier-2 user groups.
+                </p>
+            </div>
+        </div>
+
+        <div id="win-resume" class="window absolute top-20 left-[28%] w-[min(640px,90vw)] h-[min(78vh,720px)] glassmorphism rounded-xl window-shadow flex flex-col overflow-hidden border border-white/10 hidden" style="z-index: 18;">
+            <div class="window-header h-10 px-4 flex items-center justify-between cursor-move bg-slate-950/50 border-b border-white/5 shrink-0">
+                <div class="flex items-center space-x-2">
+                    <button onclick="closeWindow('win-resume', event)" class="w-3 h-3 rounded-full bg-rose-500 hover:bg-rose-600 text-[8px] text-rose-950 font-bold flex items-center justify-center">×</button>
+                    <button onclick="hideWindow('win-resume', event)" class="w-3 h-3 rounded-full bg-amber-500 hover:bg-amber-600 text-[8px] text-amber-950 font-bold flex items-center justify-center">-</button>
+                    <button onclick="maximizeWindow('win-resume', event)" class="w-3 h-3 rounded-full bg-emerald-500 hover:bg-emerald-600 text-[8px] text-emerald-950 font-bold flex items-center justify-center">+</button>
+                </div>
+                <span class="text-xs font-semibold text-slate-300"><i class="far fa-file-pdf text-rose-400 mr-1.5"></i>Praveen_Kumar_Resume.pdf</span>
+                <a href="assets/Praveen_Kumar_Resume.pdf" download="Praveen_Kumar_Resume.pdf" class="text-[10px] text-indigo-300 hover:text-white px-2 py-0.5 rounded border border-white/10 bg-white/5" onclick="event.stopPropagation()">Download</a>
+            </div>
+            <iframe src="assets/Praveen_Kumar_Resume.pdf" title="Praveen Kumar Resume" class="flex-1 w-full bg-slate-200 min-h-0"></iframe>
+        </div>
+
+        <div id="win-linkedin" class="window absolute top-20 left-[12%] w-[min(720px,92vw)] h-[min(80vh,680px)] glassmorphism rounded-xl window-shadow flex flex-col overflow-hidden border border-blue-500/20 hidden" style="z-index: 24;">
+            <div class="window-header h-10 px-4 flex items-center justify-between cursor-move bg-slate-950/50 border-b border-white/5 shrink-0">
+                <div class="flex items-center space-x-2">
+                    <button onclick="closeWindow('win-linkedin', event)" class="w-3 h-3 rounded-full bg-rose-500 hover:bg-rose-600 text-[8px] font-bold flex items-center justify-center">×</button>
+                    <button onclick="hideWindow('win-linkedin', event)" class="w-3 h-3 rounded-full bg-amber-500 hover:bg-amber-600 text-[8px] font-bold flex items-center justify-center">-</button>
+                    <button onclick="maximizeWindow('win-linkedin', event)" class="w-3 h-3 rounded-full bg-emerald-500 hover:bg-emerald-600 text-[8px] font-bold flex items-center justify-center">+</button>
+                </div>
+                <span class="text-xs font-semibold text-blue-300"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn — Praveen Kumar</span>
+                <a id="linkedin-open-tab" href="https://www.linkedin.com/in/praveen-executes/" target="_blank" rel="noopener noreferrer" class="text-[10px] text-blue-200 hover:text-white px-2 py-0.5 rounded border border-blue-500/30 bg-blue-500/10" onclick="event.stopPropagation()">Open in browser</a>
+            </div>
+            <div class="flex items-center gap-3 px-4 py-2.5 bg-slate-950/60 border-b border-white/5 shrink-0 select-text">
+                <img src="assets/praveen.png" alt="Praveen Kumar" class="w-10 h-10 rounded-full object-cover object-top border border-blue-500/40">
+                <div class="min-w-0 flex-1">
+                    <p class="text-sm font-semibold text-white truncate">Praveen Kumar</p>
+                    <a href="https://www.linkedin.com/in/praveen-executes/" target="_blank" rel="noopener noreferrer" class="text-[11px] text-blue-300 hover:text-blue-200 truncate block">linkedin.com/in/praveen-executes</a>
+                </div>
+            </div>
+            <iframe id="linkedin-frame" src="https://www.linkedin.com/in/praveen-executes/" title="Praveen Kumar on LinkedIn" class="flex-1 w-full bg-white min-h-0" allow="fullscreen" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <p id="linkedin-embed-note" class="hidden text-[10px] text-slate-500 text-center py-2 px-4 bg-slate-950/80 border-t border-white/5">
+                LinkedIn may block in-page preview — use <a href="https://www.linkedin.com/in/praveen-executes/" target="_blank" rel="noopener noreferrer" class="text-blue-400 underline">Open in browser</a> above.
+            </p>
+        </div>
+
+        <div id="win-spotify" class="window absolute top-24 right-8 w-[min(420px,calc(100vw-2rem))] glassmorphism rounded-xl window-shadow flex flex-col overflow-hidden border border-emerald-500/20 hidden" style="z-index: 25;">
+            <div class="window-header h-10 px-4 flex items-center justify-between cursor-move bg-slate-950/50 border-b border-white/5">
+                <div class="flex items-center space-x-2">
+                    <button onclick="closeWindow('win-spotify', event)" class="w-3 h-3 rounded-full bg-rose-500 hover:bg-rose-600 text-[8px] font-bold flex items-center justify-center">×</button>
+                    <button onclick="hideWindow('win-spotify', event)" class="w-3 h-3 rounded-full bg-amber-500 hover:bg-amber-600 text-[8px] font-bold flex items-center justify-center">-</button>
+                    <button class="w-3 h-3 rounded-full bg-emerald-500/50 cursor-not-allowed"></button>
+                </div>
+                <span class="text-xs font-semibold text-emerald-400"><i class="fab fa-spotify mr-1.5"></i>Arijit Singh — All Songs</span>
+                <div class="w-8"></div>
+            </div>
+            <div class="p-3 bg-slate-950/90">
+                <p class="text-[10px] text-slate-500 mb-2 px-1">Praveen's focus playlist while building — press play in the embed below.</p>
+                <iframe title="Arijit Singh Spotify playlist" src="https://open.spotify.com/embed/playlist/0Ioc7H1fh4bZ3NnGvaFxVt?utm_source=generator&theme=0" width="100%" height="380" style="border:0; border-radius:12px;" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+        </div>
+
+        <div id="win-call" class="window absolute top-16 right-6 w-[min(440px,calc(100vw-2rem))] glassmorphism rounded-xl window-shadow flex flex-col overflow-hidden border border-violet-500/25 hidden" style="z-index: 26;">
+            <div class="window-header h-10 px-4 flex items-center justify-between cursor-move bg-slate-950/50 border-b border-white/5 shrink-0">
+                <div class="flex items-center space-x-2">
+                    <button onclick="closeWindow('win-call', event)" class="w-3 h-3 rounded-full bg-rose-500 hover:bg-rose-600 text-[8px] font-bold flex items-center justify-center">×</button>
+                    <button onclick="hideWindow('win-call', event)" class="w-3 h-3 rounded-full bg-amber-500 hover:bg-amber-600 text-[8px] font-bold flex items-center justify-center">-</button>
+                    <button onclick="maximizeWindow('win-call', event)" class="w-3 h-3 rounded-full bg-emerald-500 hover:bg-emerald-600 text-[8px] font-bold flex items-center justify-center">+</button>
+                </div>
+                <span class="text-xs font-semibold text-violet-300"><i class="fas fa-video mr-1.5"></i>Connect — 1:1 Call</span>
+                <div class="w-8"></div>
+            </div>
+            <div class="p-4 overflow-y-auto max-h-[min(85vh,720px)] select-text">
+                <div class="flex items-center gap-3 mb-4 p-3 rounded-xl bg-violet-500/10 border border-violet-500/20">
+                    <img src="assets/praveen.png" alt="Praveen" class="w-12 h-12 rounded-full object-cover object-top border border-violet-400/40">
+                    <div>
+                        <p class="text-sm font-bold text-white">Book time with Praveen</p>
+                        <p class="text-[11px] text-slate-400">30-min intro · PM roles, portfolio, or product chat</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
+                    <button type="button" onclick="scrollToCalendly()" class="text-[11px] py-2.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-medium transition flex items-center justify-center gap-2">
+                        <i class="fas fa-calendar-check"></i> Schedule call
+                    </button>
+                    <a href="mailto:praveen@productlabs.dev?subject=1:1%20Call%20with%20Praveen" class="text-[11px] py-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-center text-slate-200 transition flex items-center justify-center gap-2">
+                        <i class="fas fa-envelope"></i> Email
+                    </a>
+                    <a href="https://www.linkedin.com/in/praveen-executes/" target="_blank" rel="noopener noreferrer" class="text-[11px] py-2.5 rounded-lg bg-[#0A66C2]/30 hover:bg-[#0A66C2]/50 border border-blue-500/30 text-center text-blue-200 transition flex items-center justify-center gap-2">
+                        <i class="fab fa-linkedin-in"></i> LinkedIn
+                    </a>
+                </div>
+                <p class="text-[10px] text-slate-500 mb-2 px-1">Pick a slot below — calendar syncs to your timezone.</p>
+                <div id="calendly-embed" class="rounded-xl overflow-hidden border border-white/10 bg-slate-950/50 min-h-[480px]"></div>
+                <p class="text-[10px] text-slate-600 mt-3 text-center">Prefer another channel? Right-click desktop → <span class="text-violet-400">Connect 1:1 Call</span></p>
+            </div>
+        </div>
+
+        <div id="win-terminal" class="window absolute bottom-28 left-20 w-[440px] h-[280px] glassmorphism rounded-xl window-shadow flex flex-col overflow-hidden border border-white/10 hidden" style="z-index: 12;">
+            <div class="window-header h-10 px-4 flex items-center justify-between cursor-move bg-slate-950/50 border-b border-white/5">
+                <div class="flex items-center space-x-2">
+                    <button onclick="closeWindow('win-terminal', event)" class="w-3 h-3 rounded-full bg-rose-500 hover:bg-rose-600 text-[8px] text-rose-900 font-bold flex items-center justify-center">×</button>
+                    <button onclick="hideWindow('win-terminal', event)" class="w-3 h-3 rounded-full bg-amber-500 hover:bg-amber-600 text-[8px] text-amber-900 font-bold flex items-center justify-center">-</button>
+                    <button class="w-3 h-3 rounded-full bg-emerald-500/40 cursor-not-allowed"></button>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 tracking-wide terminal-text"><i class="fas fa-terminal mr-1.5 text-amber-500"></i>praveen@indroid:~</span>
+                <div class="w-12"></div>
+            </div>
+            <div id="terminal-body" class="p-4 flex-1 overflow-y-auto bg-slate-950/85 text-emerald-400 font-mono text-xs space-y-1.5 terminal-text">
+                <p class="text-slate-500">System initialized. Secure environment tunnel open.</p>
+                <p class="text-amber-400 font-medium">Type 'help' to audit system routes, or 'clear'.</p>
+                <div id="terminal-history" class="space-y-1"></div>
+                <div class="flex items-center text-slate-100 mt-1">
+                    <span class="mr-1.5 text-indigo-400">praveen@indroid:~$</span>
+                    <input type="text" id="terminal-input" class="bg-transparent border-none outline-none flex-1 text-emerald-400 focus:ring-0 p-0" autocomplete="off" spellcheck="false">
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <nav class="fixed bottom-4 left-1/2 -translate-x-1/2 h-16 px-4 bg-slate-950/40 backdrop-blur-2xl border border-white/10 rounded-2xl flex items-center space-x-4 z-[999999] shadow-2xl">
+        <button onclick="focusOrOpen('win-portfolio')" class="w-11 h-11 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-xl flex items-center justify-center text-white text-lg transition-transform hover:scale-110 hover:-translate-y-1"><i class="far fa-folder"></i></button>
+        <button onclick="focusOrOpen('win-about')" class="w-11 h-11 bg-gradient-to-tr from-purple-600 to-pink-500 rounded-xl flex items-center justify-center text-white text-lg transition-transform hover:scale-110 hover:-translate-y-1"><i class="far fa-user"></i></button>
+        <button onclick="openSpotify()" class="w-11 h-11 bg-gradient-to-tr from-emerald-600 to-teal-500 rounded-xl flex items-center justify-center text-white text-lg transition-transform hover:scale-110 hover:-translate-y-1" title="Arijit Singh playlist"><i class="fab fa-spotify"></i></button>
+        <button onclick="openResume()" class="w-11 h-11 bg-gradient-to-tr from-rose-600 to-orange-500 rounded-xl flex items-center justify-center text-white text-lg transition-transform hover:scale-110 hover:-translate-y-1 hidden sm:flex" title="Resume"><i class="far fa-file-pdf"></i></button>
+        <button onclick="openCall()" class="w-11 h-11 bg-gradient-to-tr from-violet-600 to-fuchsia-500 rounded-xl flex items-center justify-center text-white text-lg transition-transform hover:scale-110 hover:-translate-y-1" title="Book 1:1 call"><i class="fas fa-video"></i></button>
+        <button onclick="focusOrOpen('win-terminal')" class="w-11 h-11 bg-slate-900 border border-white/10 rounded-xl flex items-center justify-center text-amber-400 text-sm font-bold terminal-text transition-transform hover:scale-110 hover:-translate-y-1">&gt;_</button>
+    </nav>
+
+    <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+
+    <script>
+        // macOS-style boot splash
+        (function bootSequence() {
+            const splash = document.getElementById('boot-splash');
+            const bar = document.getElementById('boot-progress-bar');
+            const track = document.getElementById('boot-progress-track');
+            const status = document.getElementById('boot-status');
+            if (!splash || !bar) return;
+
+            const steps = [
+                { pct: 12, msg: 'Starting up…' },
+                { pct: 28, msg: 'Loading system files…' },
+                { pct: 48, msg: 'Mounting Indroid drive…' },
+                { pct: 68, msg: 'Initializing windows…' },
+                { pct: 86, msg: 'Preparing desktop…' },
+                { pct: 100, msg: 'Welcome back, Praveen.' }
+            ];
+            const MIN_BOOT_MS = 3200;
+            const start = Date.now();
+            let stepIndex = 0;
+            let bootDone = false;
+
+            function setProgress(pct, msg) {
+                bar.style.width = pct + '%';
+                if (track) track.setAttribute('aria-valuenow', String(pct));
+                if (status && msg) status.textContent = msg;
+            }
+
+            function runSteps() {
+                if (stepIndex >= steps.length) {
+                    bootDone = true;
+                    return;
+                }
+                const s = steps[stepIndex++];
+                setProgress(s.pct, s.msg);
+                setTimeout(runSteps, 340 + Math.random() * 180);
+            }
+            runSteps();
+
+            function dismissSplash() {
+                splash.classList.add('boot-fade-out');
+                document.body.classList.remove('splash-active');
+                setTimeout(() => splash.remove(), 700);
+            }
+
+            function tryDismiss() {
+                if (!bootDone) return;
+                const elapsed = Date.now() - start;
+                const wait = Math.max(0, MIN_BOOT_MS - elapsed);
+                setTimeout(dismissSplash, wait);
+            }
+
+            Promise.all([
+                new Promise((resolve) => {
+                    if (document.readyState === 'complete') resolve();
+                    else window.addEventListener('load', resolve, { once: true });
+                }),
+                new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = img.onerror = resolve;
+                    img.src = 'assets/logo.jpg';
+                })
+            ]).then(() => {
+                const poll = setInterval(() => {
+                    if (bootDone) {
+                        clearInterval(poll);
+                        tryDismiss();
+                    }
+                }, 80);
+                setTimeout(() => {
+                    clearInterval(poll);
+                    if (!bootDone) {
+                        setProgress(100, 'Welcome back, Praveen.');
+                        bootDone = true;
+                    }
+                    tryDismiss();
+                }, 6000);
+            });
+        })();
+
+        // System Menu Time Counter
+        function runClock() {
+            const now = new Date();
+            document.getElementById('os-clock').textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        setInterval(runClock, 1000); runClock();
+
+        let topZIndex = 100;
+        const RESUME_PATH = 'assets/Praveen_Kumar_Resume.pdf';
+        const LINKEDIN_URL = 'https://www.linkedin.com/in/praveen-executes/';
+        const CALENDLY_URL = 'https://calendly.com/praveen-executes/30min';
+        const WALLPAPERS = [
+            'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2560&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2560&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2560&auto=format&fit=crop'
+        ];
+        let wallpaperIndex = 0;
+        let calendlyLoaded = false;
+        let ctxTargetIcon = null;
+        let ctxTargetWindow = null;
+
+        function openResume() { focusOrOpen('win-resume'); }
+        function openSpotify() { focusOrOpen('win-spotify'); }
+        function openLinkedIn() { focusOrOpen('win-linkedin'); }
+
+        function openCall() {
+            focusOrOpen('win-call');
+            initCalendly();
+        }
+
+        function initCalendly() {
+            const mount = document.getElementById('calendly-embed');
+            if (!mount || calendlyLoaded) return;
+            const tryInit = () => {
+                if (typeof Calendly === 'undefined') return false;
+                mount.innerHTML = '';
+                Calendly.initInlineWidget({
+                    url: CALENDLY_URL,
+                    parentElement: mount,
+                    prefill: {},
+                    utm: { utmSource: 'indroid' }
+                });
+                calendlyLoaded = true;
+                return true;
+            };
+            if (!tryInit()) {
+                const poll = setInterval(() => {
+                    if (tryInit()) clearInterval(poll);
+                }, 200);
+                setTimeout(() => {
+                    clearInterval(poll);
+                    if (!calendlyLoaded && mount.innerHTML === '') {
+                        mount.innerHTML = `<div class="p-6 text-center text-sm text-slate-400">
+                            <p class="mb-3">Calendar loading… or open scheduling in a new tab:</p>
+                            <a href="${CALENDLY_URL}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-500 transition"><i class="fas fa-external-link-alt"></i> Book on Calendly</a>
+                        </div>`;
+                    }
+                }, 12000);
+            }
+        }
+
+        function scrollToCalendly() {
+            openCall();
+            document.getElementById('calendly-embed')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function openIconTarget(icon) {
+            if (!icon) return;
+            const action = icon.dataset.action;
+            const winId = icon.dataset.open;
+            if (action === 'resume') openResume();
+            else if (action === 'spotify') openSpotify();
+            else if (action === 'linkedin') openLinkedIn();
+            else if (action === 'call') openCall();
+            else if (winId) focusOrOpen(winId);
+        }
+
+        // ——— Context menus ———
+        const ctxMenu = document.getElementById('context-menu');
+        const desktopSurface = document.getElementById('desktop-surface');
+
+        function hideContextMenu() {
+            ctxMenu.classList.remove('visible');
+            ctxMenu.setAttribute('aria-hidden', 'true');
+            ctxMenu.innerHTML = '';
+        }
+
+        function showContextMenu(x, y, items) {
+            ctxMenu.innerHTML = items.map(item => {
+                if (item.type === 'sep') return '<div class="ctx-sep"></div>';
+                if (item.type === 'label') return `<div class="ctx-label">${item.label}</div>`;
+                const cls = item.disabled ? 'ctx-item disabled' : 'ctx-item';
+                return `<button type="button" class="${cls}" data-ctx="${item.id}" ${item.disabled ? 'disabled' : ''}><i class="${item.icon || 'fas fa-circle text-[6px]'} w-4 text-center ${item.iconColor || 'text-slate-400'}"></i><span>${item.label}</span></button>`;
+            }).join('');
+
+            ctxMenu.classList.add('visible');
+            ctxMenu.setAttribute('aria-hidden', 'false');
+
+            const pad = 8;
+            const rect = ctxMenu.getBoundingClientRect();
+            let left = x;
+            let top = y;
+            if (left + rect.width > window.innerWidth - pad) left = window.innerWidth - rect.width - pad;
+            if (top + rect.height > window.innerHeight - pad) top = window.innerHeight - rect.height - pad;
+            ctxMenu.style.left = `${Math.max(pad, left)}px`;
+            ctxMenu.style.top = `${Math.max(pad, top)}px`;
+
+            ctxMenu.querySelectorAll('[data-ctx]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    runContextAction(btn.dataset.ctx);
+                    hideContextMenu();
+                });
+            });
+        }
+
+        function runContextAction(id) {
+            const map = {
+                'open-call': () => openCall(),
+                'open-about': () => focusOrOpen('win-about'),
+                'open-portfolio': () => focusOrOpen('win-portfolio'),
+                'open-terminal': () => focusOrOpen('win-terminal'),
+                'open-resume': () => openResume(),
+                'open-linkedin': () => openLinkedIn(),
+                'open-spotify': () => openSpotify(),
+                'open-teardown': () => focusOrOpen('win-teardown'),
+                'icon-open': () => openIconTarget(ctxTargetIcon),
+                'icon-info': () => {
+                    const name = ctxTargetIcon?.dataset.label || 'Item';
+                    showToast(`${name} — Indroid`);
+                },
+                'sort-icons': sortDesktopIcons,
+                'wallpaper': changeWallpaper,
+                'refresh': () => location.reload(),
+                'close-all': () => document.querySelectorAll('.window').forEach(w => w.classList.add('hidden')),
+                'win-focus': () => ctxTargetWindow && focusWindow(ctxTargetWindow),
+                'win-min': () => ctxTargetWindow && hideWindow(ctxTargetWindow.id),
+                'win-close': () => ctxTargetWindow && closeWindow(ctxTargetWindow.id)
+            };
+            if (map[id]) map[id]();
+        }
+
+        function sortDesktopIcons() {
+            const icons = [...document.querySelectorAll('.desktop-icon')];
+            icons.forEach((icon, i) => {
+                const col = i % 2;
+                const row = Math.floor(i / 2);
+                icon.style.position = 'absolute';
+                icon.style.left = `${16 + col * 100}px`;
+                icon.style.top = `${16 + row * 96}px`;
+            });
+            showToast('Desktop icons sorted');
+        }
+
+        function changeWallpaper() {
+            wallpaperIndex = (wallpaperIndex + 1) % WALLPAPERS.length;
+            document.body.style.backgroundImage = `url('${WALLPAPERS[wallpaperIndex]}')`;
+            showToast('Wallpaper changed');
+        }
+
+        function showToast(msg) {
+            let t = document.getElementById('os-toast');
+            if (!t) {
+                t = document.createElement('div');
+                t.id = 'os-toast';
+                t.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 px-4 py-2 rounded-lg glassmorphism text-xs text-white z-[999999] border border-white/10 shadow-xl transition-opacity';
+                document.body.appendChild(t);
+            }
+            t.textContent = msg;
+            t.style.opacity = '1';
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => { t.style.opacity = '0'; }, 2200);
+        }
+
+        function desktopContextMenu(e) {
+            e.preventDefault();
+            document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+            ctxTargetIcon = null;
+            showContextMenu(e.clientX, e.clientY, [
+                { type: 'label', label: 'Desktop' },
+                { id: 'open-call', label: 'Connect 1:1 Call', icon: 'fas fa-video', iconColor: 'text-violet-400' },
+                { type: 'sep' },
+                { id: 'open-about', label: 'About Me', icon: 'far fa-user', iconColor: 'text-purple-400' },
+                { id: 'open-portfolio', label: 'Portfolio', icon: 'far fa-folder', iconColor: 'text-blue-400' },
+                { id: 'open-resume', label: 'Resume', icon: 'far fa-file-pdf', iconColor: 'text-rose-400' },
+                { id: 'open-linkedin', label: 'LinkedIn', icon: 'fab fa-linkedin-in', iconColor: 'text-blue-400' },
+                { id: 'open-terminal', label: 'Terminal', icon: 'fas fa-terminal', iconColor: 'text-amber-400' },
+                { type: 'sep' },
+                { id: 'sort-icons', label: 'Sort Icons', icon: 'fas fa-arrow-down-wide-short', iconColor: 'text-slate-400' },
+                { id: 'wallpaper', label: 'Change Wallpaper', icon: 'fas fa-image', iconColor: 'text-slate-400' },
+                { id: 'refresh', label: 'Refresh Desktop', icon: 'fas fa-rotate-right', iconColor: 'text-slate-400' },
+                { id: 'close-all', label: 'Close All Windows', icon: 'fas fa-window-close', iconColor: 'text-rose-400' }
+            ]);
+        }
+
+        function iconContextMenu(e, icon) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+            icon.classList.add('selected');
+            ctxTargetIcon = icon;
+            const label = icon.dataset.label || 'Item';
+            showContextMenu(e.clientX, e.clientY, [
+                { type: 'label', label },
+                { id: 'icon-open', label: 'Open', icon: 'fas fa-folder-open', iconColor: 'text-indigo-400' },
+                { type: 'sep' },
+                { id: 'open-call', label: 'Connect 1:1 Call', icon: 'fas fa-video', iconColor: 'text-violet-400' },
+                { id: 'icon-info', label: 'Get Info', icon: 'fas fa-circle-info', iconColor: 'text-slate-400' }
+            ]);
+        }
+
+        desktopSurface?.addEventListener('contextmenu', (e) => {
+            if (e.target.closest('.window') || e.target.closest('nav') || e.target.closest('header')) return;
+            if (e.target.closest('.desktop-icon')) return;
+            desktopContextMenu(e);
+        });
+
+        document.querySelectorAll('.desktop-icon').forEach(icon => {
+            icon.addEventListener('contextmenu', (e) => iconContextMenu(e, icon));
+            icon.addEventListener('click', (e) => {
+                if (e.detail === 1) {
+                    document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+                    icon.classList.add('selected');
+                }
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!ctxMenu.contains(e.target)) hideContextMenu();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') hideContextMenu();
+        });
+        window.addEventListener('scroll', hideContextMenu, true);
+        window.addEventListener('resize', hideContextMenu);
+
+        // Window Layer Management Focus Loop
+        function focusWindow(winElement) {
+            topZIndex++;
+            winElement.style.zIndex = topZIndex;
+        }
+
+        // Global Event Triggers for Desktop Management
+        function focusOrOpen(id) {
+            const win = document.getElementById(id);
+            if (win.classList.contains('hidden')) {
+                win.classList.remove('hidden');
+            }
+            focusWindow(win);
+        }
+
+        function closeWindow(id, e) {
+            if(e) e.stopPropagation();
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function hideWindow(id, e) {
+            if(e) e.stopPropagation();
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function maximizeWindow(id, e) {
+            if(e) e.stopPropagation();
+            const win = document.getElementById(id);
+            if (win.style.width === '100%') {
+                win.style.width = '65%'; win.style.height = '72%';
+                win.style.top = '16%'; win.style.left = '20%';
+            } else {
+                win.style.width = '100%'; win.style.height = 'calc(100% - 3rem)';
+                win.style.top = '2rem'; win.style.left = '0px';
+            }
+        }
+
+        document.querySelectorAll('.window').forEach(win => {
+            win.addEventListener('mousedown', () => focusWindow(win));
+            win.addEventListener('contextmenu', (e) => {
+                if (e.target.closest('input, textarea, iframe')) return;
+                e.preventDefault();
+                e.stopPropagation();
+                ctxTargetWindow = win;
+                ctxTargetIcon = null;
+                const title = win.querySelector('.window-header span')?.textContent?.trim() || 'Window';
+                showContextMenu(e.clientX, e.clientY, [
+                    { type: 'label', label: title },
+                    { id: 'win-focus', label: 'Bring to Front', icon: 'fas fa-layer-group', iconColor: 'text-indigo-400' },
+                    { id: 'win-min', label: 'Minimize', icon: 'fas fa-window-minimize', iconColor: 'text-amber-400' },
+                    { id: 'win-close', label: 'Close', icon: 'fas fa-xmark', iconColor: 'text-rose-400' },
+                    { type: 'sep' },
+                    { id: 'open-call', label: 'Connect 1:1 Call', icon: 'fas fa-video', iconColor: 'text-violet-400' }
+                ]);
+            });
+        });
+
+        // Advanced fluid Drag System Node Integration
+        document.querySelectorAll('.window-header').forEach(header => {
+            header.addEventListener('mousedown', function(e) {
+                if (e.target.tagName === 'BUTTON') return;
+                
+                const win = header.parentElement;
+                focusWindow(win);
+                
+                let shiftX = e.clientX - win.getBoundingClientRect().left;
+                let shiftY = e.clientY - win.getBoundingClientRect().top;
+
+                function moveAt(clientX, clientY) {
+                    win.style.left = (clientX - shiftX) + 'px';
+                    win.style.top = (clientY - shiftY) + 'px';
+                }
+
+                function onMouseMove(event) {
+                    moveAt(event.clientX, event.clientY);
+                }
+
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', function() {
+                    document.removeEventListener('mousemove', onMouseMove);
+                }, { once: true });
+            });
+        });
+
+        // Console Shell Interpretation Parser 
+        const termInput = document.getElementById('terminal-input');
+        const termHistory = document.getElementById('terminal-history');
+        const termBody = document.getElementById('terminal-body');
+
+        termInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const rawVal = termInput.value.trim();
+                const cmd = rawVal.toLowerCase();
+                if (!cmd) return;
+
+                const userLine = document.createElement('div');
+                userLine.innerHTML = `<span class="text-indigo-400">praveen@indroid:~$</span> <span class="text-slate-100">${rawVal}</span>`;
+                termHistory.appendChild(userLine);
+
+                const outLine = document.createElement('div');
+                outLine.classList.add('text-slate-300', 'mt-0.5', 'mb-1');
+
+                switch(cmd) {
+                    case 'help':
+                        outLine.innerHTML = `Commands for Praveen Kumar:<br>
+                        - <span class="text-amber-400">about</span> · <span class="text-amber-400">resume</span> · <span class="text-amber-400">call</span> · <span class="text-amber-400">linkedin</span> · <span class="text-amber-400">spotify</span> · <span class="text-amber-400">clear</span>`;
+                        break;
+                    case 'about':
+                        outLine.textContent = "Praveen Kumar — Technical PM (ex-cybersecurity). Growth experiments, secure SaaS roadmaps, data-led discovery.";
+                        break;
+                    case 'skills':
+                        outLine.innerHTML = "» Product Strategy  [██████████] 100%<br>» Security / Risk   [██████████] 100%<br>» Data & Metrics    [████████░░] 85%<br>» UX & Discovery    [███████░░░] 75%";
+                        break;
+                    case 'resume':
+                        openResume();
+                        outLine.innerHTML = `<span class="text-emerald-400">Opened</span> ${RESUME_PATH}`;
+                        break;
+                    case 'linkedin':
+                        openLinkedIn();
+                        outLine.innerHTML = `<span class="text-emerald-400">Opened</span> <a href="${LINKEDIN_URL}" target="_blank" rel="noopener" class="text-blue-400 underline">${LINKEDIN_URL}</a>`;
+                        break;
+                    case 'call':
+                    case 'meet':
+                    case 'book':
+                        openCall();
+                        outLine.innerHTML = '<span class="text-violet-400">Opened</span> 1:1 Call scheduler — pick a time slot.';
+                        break;
+                    case 'spotify':
+                    case 'music':
+                    case 'arijit':
+                        openSpotify();
+                        outLine.innerHTML = '<span class="text-emerald-400">Playing</span> Arijit Singh playlist — check the Spotify window.';
+                        break;
+                    case 'clear':
+                        termHistory.innerHTML = '';
+                        outLine.innerHTML = '';
+                        break;
+                    default:
+                        outLine.innerHTML = `<span class="text-rose-400">Unknown:</span> '${rawVal}'. Try help, resume, or spotify.`;
+                }
+
+                if(outLine.innerHTML || outLine.textContent) termHistory.appendChild(outLine);
+                termInput.value = '';
+                termBody.scrollTop = termBody.scrollHeight;
+            }
+        });
+
+        // LinkedIn iframe often blocked by X-Frame-Options — show helper after load attempt
+        const linkedinFrame = document.getElementById('linkedin-frame');
+        const linkedinNote = document.getElementById('linkedin-embed-note');
+        if (linkedinFrame) {
+            linkedinFrame.addEventListener('error', () => linkedinNote?.classList.remove('hidden'));
+            setTimeout(() => {
+                try {
+                    const doc = linkedinFrame.contentDocument;
+                    if (!doc || !doc.body || doc.body.childElementCount === 0) {
+                        linkedinNote?.classList.remove('hidden');
+                    }
+                } catch {
+                    linkedinNote?.classList.remove('hidden');
+                }
+            }, 2500);
+        }
+    </script>
+</body>
+</html>

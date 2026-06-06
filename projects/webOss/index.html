@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebOS — The Cloud Operating System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="desktop">
+        
+        <div class="bg-gradient bg-grad-1"></div>
+        <div class="bg-gradient bg-grad-2"></div>
+        <div class="bg-gradient bg-grad-3"></div>
+
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <i class="fa-solid fa-cloud-bolt webos-logo"></i>
+                <span class="brand">WebOS</span>
+                <span class="menu-item active">Finder</span>
+                <span class="menu-item">File</span>
+                <span class="menu-item">Edit</span>
+                <span class="menu-item">View</span>
+                <span class="menu-item">Terminal</span>
+                <span class="menu-item">Help</span>
+            </div>
+            <div class="top-bar-right">
+                <span class="status-indicator"><i class="fa-solid fa-wifi"></i></span>
+                <span class="status-indicator"><i class="fa-solid fa-microchip"></i> 35%</span>
+                <span class="status-indicator-btn" onclick="openWindow('task-manager')"><i class="fa-solid fa-gauge-high"></i> Dashboard</span>
+                <span id="top-bar-clock">Sat 11:53 AM</span>
+            </div>
+        </header>
+
+        <main class="desktop-icons">
+            <div class="icon-grid-item" onclick="openWindow('projects-win')">
+                <div class="icon-wrapper folder"><i class="fa-solid fa-folder-closed"></i></div>
+                <span class="icon-label">Projects</span>
+            </div>
+            <div class="icon-grid-item" onclick="openWindow('domains-win')">
+                <div class="icon-wrapper globe"><i class="fa-solid fa-globe"></i></div>
+                <span class="icon-label">Domains</span>
+            </div>
+            <div class="icon-grid-item" onclick="openWindow('apps-win')">
+                <div class="icon-wrapper box"><i class="fa-solid fa-box-open"></i></div>
+                <span class="icon-label">Applications</span>
+            </div>
+            <div class="icon-grid-item" onclick="openWindow('cursor-win')">
+                <div class="icon-wrapper cursor-ide"><i class="fa-solid fa-code"></i></div>
+                <span class="icon-label">Cursor IDE</span>
+            </div>
+            <div class="icon-grid-item" onclick="openWindow('ai-win')">
+                <div class="icon-wrapper ai-bot"><i class="fa-solid fa-robot"></i></div>
+                <span class="icon-label">AI Assistant</span>
+            </div>
+            <div class="icon-grid-item" onclick="openWindow('task-manager')">
+                <div class="icon-wrapper chart"><i class="fa-solid fa-chart-pie"></i></div>
+                <span class="icon-label">Task Manager</span>
+            </div>
+            <div class="icon-grid-item">
+                <div class="icon-wrapper database"><i class="fa-solid fa-database"></i></div>
+                <span class="icon-label">Databases</span>
+            </div>
+            <div class="icon-grid-item">
+                <div class="icon-wrapper storage"><i class="fa-solid fa-hard-drive"></i></div>
+                <span class="icon-label">Storage</span>
+            </div>
+            <div class="icon-grid-item">
+                <div class="icon-wrapper network"><i class="fa-solid fa-network-wired"></i></div>
+                <span class="icon-label">Network</span>
+            </div>
+        </main>
+
+        <div id="cursor-win" class="window window-lg" style="top: 8%; left: 12%;">
+            <div class="window-header" onmousedown="dragStart(event, 'cursor-win')">
+                <div class="window-controls">
+                    <span class="control close" onclick="closeWindow('cursor-win')"></span>
+                    <span class="control minimize" onclick="closeWindow('cursor-win')"></span>
+                    <span class="control maximize"></span>
+                </div>
+                <div class="window-title"><i class="fa-solid fa-code text-cyan"></i> WebOS Cursor AI — index.html</div>
+                <div class="window-actions">
+                    <button class="btn btn-glow" onclick="openPublishModal('Portfolio Website')"><i class="fa-solid fa-rocket"></i> Publish</button>
+                </div>
+            </div>
+            <div class="window-body cursor-layout">
+                <aside class="cursor-sidebar">
+                    <div class="sidebar-title">WORKSPACE</div>
+                    <ul class="file-tree">
+                        <li class="tree-folder open"><i class="fa-solid fa-chevron-down"></i> <i class="fa-solid fa-folder-open text-amber"></i> Portfolio</li>
+                        <li class="tree-item active file-indent"><i class="fa-brands fa-html5 text-orange"></i> index.html</li>
+                        <li class="tree-item file-indent"><i class="fa-brands fa-css3-alt text-blue"></i> styles.css</li>
+                        <li class="tree-item file-indent"><i class="fa-brands fa-js text-yellow"></i> app.js</li>
+                        <li class="tree-folder"><i class="fa-solid fa-chevron-right"></i> <i class="fa-solid fa-folder text-amber"></i> assets</li>
+                    </ul>
+                </aside>
+                
+                <main class="cursor-editor">
+                    <div class="editor-tabs">
+                        <div class="tab active"><i class="fa-brands fa-html5 text-orange"></i> index.html <i class="fa-solid fa-xmark tab-close"></i></div>
+                        <div class="tab"><i class="fa-brands fa-css3-alt text-blue"></i> styles.css</div>
+                        <div class="tab"><i class="fa-brands fa-js text-yellow"></i> app.js</div>
+                    </div>
+                    <div class="code-viewport">
+                        <pre class="code-lines"><code>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</code></pre>
+                        <pre class="code-content"><code><span class="token tag">&lt;!DOCTYPE <span class="token attr-name">html</span>&gt;</span>
+<span class="token tag">&lt;<span class="token attr-value">html</span> <span class="token attr-name">lang</span>=<span class="token attr-value">"en"</span>&gt;</span>
+<span class="token tag">&lt;<span class="token attr-value">head</span>&gt;</span>
+    <span class="token tag">&lt;<span class="token attr-value">meta</span> <span class="token attr-name">charset</span>=<span class="token attr-value">"UTF-8"</span>&gt;</span>
+    <span class="token tag">&lt;<span class="token attr-value">title</span>&gt;</span>Developer Portfolio &lt;<span class="token tag">/title&gt;</span>
+    <span class="token tag">&lt;<span class="token attr-value">link</span> <span class="token attr-name">rel</span>=<span class="token attr-value">"stylesheet"</span> <span class="token attr-name">href</span>=<span class="token attr-value">"styles.css"</span>&gt;</span>
+<span class="token tag">&lt;<span class="token attr-value">/head</span>&gt;</span>
+<span class="token tag">&lt;<span class="token attr-value">body</span> <span class="token attr-name">class</span>=<span class="token attr-value">"dark-mode"</span>&gt;</span>
+    <span class="token tag">&lt;<span class="token attr-value">main</span> <span class="token attr-name">class</span>=<span class="token attr-value">"hero"</span>&gt;</span>
+        <span class="token tag">&lt;<span class="token attr-value">h1</span>&gt;</span>Building Next-Gen WebOS Platforms<span class="token tag">&lt;<span class="token attr-value">/h1</span>&gt;</span>
+        <span class="token tag">&lt;<span class="token attr-value">p</span>&gt;</span>AI assisted deployment pipeline framework.<span class="token tag">&lt;<span class="token attr-value">/p</span>&gt;</span>
+    <span class="token tag">&lt;<span class="token attr-value">/main</span>&gt;</span>
+    <span class="token tag">&lt;<span class="token attr-value">script</span> <span class="token attr-name">src</span>=<span class="token attr-value">"app.js"</span>&gt;</span><span class="token tag">&lt;<span class="token attr-value">/script</span>&gt;</span><span class="span-cursor"></span>
+<span class="token tag">&lt;<span class="token attr-value">/body</span>&gt;</span></code></pre>
+                    </div>
+                </main>
+
+                <aside class="cursor-ai-chat">
+                    <div class="chat-header">
+                        <span><i class="fa-solid fa-sparkles text-purple"></i> Copilot Workspace</span>
+                    </div>
+                    <div class="chat-history">
+                        <div class="chat-bubble user">
+                            Build me a SaaS landing page
+                        </div>
+                        <div class="chat-bubble ai">
+                            <p>Creating cloud workspace architecture...</p>
+                            <div class="ai-status-item"><i class="fa-solid fa-circle-check text-emerald"></i> index.html structural scaffolding ready</div>
+                            <div class="ai-status-item"><i class="fa-solid fa-circle-check text-emerald"></i> styles.css glassmorphism classes added</div>
+                            <div class="ai-status-item"><i class="fa-solid fa-circle-check text-emerald"></i> app.js event registration active</div>
+                        </div>
+                    </div>
+                    <div class="chat-input-wrapper">
+                        <input type="text" placeholder="Ask AI to modify codebase..." disabled>
+                        <button class="chat-send"><i class="fa-solid fa-arrow-up"></i></button>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <div id="projects-win" class="window window-md" style="top: 15%; left: 20%;">
+            <div class="window-header" onmousedown="dragStart(event, 'projects-win')">
+                <div class="window-controls">
+                    <span class="control close" onclick="closeWindow('projects-win')"></span>
+                    <span class="control minimize" onclick="closeWindow('projects-win')"></span>
+                    <span class="control maximize"></span>
+                </div>
+                <div class="window-title"><i class="fa-solid fa-folder-open text-amber"></i> Projects Manager</div>
+                <div class="window-actions">
+                    <button class="btn btn-sm btn-primary"><i class="fa-solid fa-plus"></i> New Project</button>
+                </div>
+            </div>
+            <div class="window-body dashboard-grid">
+                <div class="card clickable-card" onclick="openWindow('cursor-win')">
+                    <div class="card-meta">
+                        <span class="folder-big-icon"><i class="fa-solid fa-folder text-amber"></i></span>
+                        <span class="badge status-online"><span class="dot"></span> Running</span>
+                    </div>
+                    <h3 class="card-title">Portfolio Website</h3>
+                    <p class="card-subtext">portfolio.workspace.webos.app</p>
+                    <div class="card-footer">
+                        <span><i class="fa-regular fa-clock"></i> Edited 2m ago</span>
+                        <i class="fa-solid fa-arrow-right-to-bracket text-muted"></i>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-meta">
+                        <span class="folder-big-icon"><i class="fa-solid fa-folder text-purple"></i></span>
+                        <span class="badge status-online"><span class="dot"></span> Running</span>
+                    </div>
+                    <h3 class="card-title">AI Chatbot Engine</h3>
+                    <p class="card-subtext">chatbot.workspace.webos.app</p>
+                    <div class="card-footer">
+                        <span><i class="fa-regular fa-clock"></i> Edited 1h ago</span>
+                        <i class="fa-solid fa-arrow-right-to-bracket text-muted"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="domains-win" class="window window-md" style="top: 20%; left: 25%;">
+            <div class="window-header" onmousedown="dragStart(event, 'domains-win')">
+                <div class="window-controls">
+                    <span class="control close" onclick="closeWindow('domains-win')"></span>
+                    <span class="control minimize" onclick="closeWindow('domains-win')"></span>
+                    <span class="control maximize"></span>
+                </div>
+                <div class="window-title"><i class="fa-solid fa-globe text-cyan"></i> Routing &amp; Domains</div>
+                <div class="window-actions">
+                    <button class="btn btn-sm btn-primary" onclick="openDomainModal()"><i class="fa-solid fa-link"></i> Connect Domain</button>
+                </div>
+            </div>
+            <div class="window-body domain-layout">
+                <div class="domain-card">
+                    <div class="domain-header">
+                        <div class="domain-info">
+                            <i class="fa-solid fa-globe text-emerald"></i>
+                            <span class="domain-name">myportfolio.com</span>
+                        </div>
+                        <span class="badge status-online"><span class="dot"></span> Active</span>
+                    </div>
+                    
+                    <div class="domain-tree-wrapper">
+                        <div class="tree-node root-node"><i class="fa-solid fa-network-wired text-cyan"></i> Edge Router</div>
+                        <div class="tree-branch-group">
+                            <div class="tree-node leaf-node"><i class="fa-brands fa-html5 text-orange"></i> index.html</div>
+                            <div class="tree-node leaf-node"><i class="fa-solid fa-folder text-amber"></i> assets/</div>
+                            <div class="tree-node subfolder-node">
+                                <div class="subfolder-header"><i class="fa-solid fa-folder-open text-purple"></i> blog/</div>
+                                <span class="subtext-routing">blog.myportfolio.com</span>
+                            </div>
+                            <div class="tree-node subfolder-node">
+                                <div class="subfolder-header"><i class="fa-solid fa-folder-open text-pink"></i> api/</div>
+                                <span class="subtext-routing">api.myportfolio.com</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="apps-win" class="window window-lg" style="top: 12%; left: 18%;">
+            <div class="window-header" onmousedown="dragStart(event, 'apps-win')">
+                <div class="window-controls">
+                    <span class="control close" onclick="closeWindow('apps-win')"></span>
+                    <span class="control minimize" onclick="closeWindow('apps-win')"></span>
+                    <span class="control maximize"></span>
+                </div>
+                <div class="window-title"><i class="fa-solid fa-box-open text-purple"></i> WebOS Cloud App Store</div>
+            </div>
+            <div class="window-body apps-marketplace">
+                <div class="app-marketplace-card">
+                    <div class="app-card-top">
+                        <div class="app-logo-box wordpress"><i class="fa-brands fa-wordpress"></i></div>
+                        <div class="app-meta">
+                            <h4>WordPress</h4>
+                            <p>Headless CMS content ecosystem</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-secondary btn-full" id="btn-app-wp" onclick="toggleAppInstall('wp')">Install</button>
+                </div>
+                <div class="app-marketplace-card">
+                    <div class="app-card-top">
+                        <div class="app-logo-box ghost"><i class="fa-solid fa-ghost"></i></div>
+                        <div class="app-meta">
+                            <h4>Ghost</h4>
+                            <p>Professional publishing infrastructure</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-secondary btn-full" id="btn-app-ghost" onclick="toggleAppInstall('ghost')">Install</button>
+                </div>
+                <div class="app-marketplace-card">
+                    <div class="app-card-top">
+                        <div class="app-logo-box n8n"><i class="fa-solid fa-diagram-project"></i></div>
+                        <div class="app-meta">
+                            <h4>n8n</h4>
+                            <p>Node-based active automation server</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-secondary btn-full" id="btn-app-n8n" onclick="toggleAppInstall('n8n')">Install</button>
+                </div>
+                <div class="app-marketplace-card">
+                    <div class="app-card-top">
+                        <div class="app-logo-box supabase"><i class="fa-solid fa-bolt"></i></div>
+                        <div class="app-meta">
+                            <h4>Supabase</h4>
+                            <p>Open source Firebase alternative engine</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-secondary btn-full" id="btn-app-sb" onclick="toggleAppInstall('sb')">Install</button>
+                </div>
+                <div class="app-marketplace-card">
+                    <div class="app-card-top">
+                        <div class="app-logo-box postgresql"><i class="fa-solid fa-database"></i></div>
+                        <div class="app-meta">
+                            <h4>PostgreSQL</h4>
+                            <p>Relational high-availability cluster</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-secondary btn-full" id="btn-app-pg" onclick="toggleAppInstall('pg')">Install</button>
+                </div>
+                <div class="app-marketplace-card">
+                    <div class="app-card-top">
+                        <div class="app-logo-box strapi"><i class="fa-solid fa-feather"></i></div>
+                        <div class="app-meta">
+                            <h4>Strapi</h4>
+                            <p>Customizable dark-mode headless CMS</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-secondary btn-full" id="btn-app-strapi" onclick="toggleAppInstall('strapi')">Install</button>
+                </div>
+                <div class="app-marketplace-card">
+                    <div class="app-card-top">
+                        <div class="app-logo-box nextcloud"><i class="fa-solid fa-cloud"></i></div>
+                        <div class="app-meta">
+                            <h4>Nextcloud</h4>
+                            <p>Distributed storage decentralized portal</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-secondary btn-full" id="btn-app-nc" onclick="toggleAppInstall('nc')">Install</button>
+                </div>
+                <div class="app-marketplace-card">
+                    <div class="app-card-top">
+                        <div class="app-logo-box chatwoot"><i class="fa-solid fa-comments"></i></div>
+                        <div class="app-meta">
+                            <h4>Chatwoot</h4>
+                            <p>Omnichannel real-time customer utility</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-secondary btn-full" id="btn-app-cw" onclick="toggleAppInstall('cw')">Install</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="ai-win" class="window window-sm" style="top: 15%; left: 55%;">
+            <div class="window-header" onmousedown="dragStart(event, 'ai-win')">
+                <div class="window-controls">
+                    <span class="control close" onclick="closeWindow('ai-win')"></span>
+                    <span class="control minimize" onclick="closeWindow('ai-win')"></span>
+                    <span class="control maximize"></span>
+                </div>
+                <div class="window-title"><i class="fa-solid fa-robot text-purple"></i> WebOS Core AI</div>
+            </div>
+            <div class="window-body ai-standalone-layout">
+                <div class="chat-history" id="standalone-chat-history">
+                    <div class="chat-bubble user">Build me a portfolio website with dark mode.</div>
+                    <div class="chat-bubble ai" id="standalone-ai-bubble">
+                        <p>I'm generating your project container now...</p>
+                        <div class="typing-indicators-container">
+                            <div class="ai-status-item file-step transparent-step" id="step-h"><i class="fa-solid fa-circle-check text-emerald"></i> Generated HTML Code Context</div>
+                            <div class="ai-status-item file-step transparent-step" id="step-c"><i class="fa-solid fa-circle-check text-emerald"></i> Generated Responsive CSS Layout</div>
+                            <div class="ai-status-item file-step transparent-step" id="step-j"><i class="fa-solid fa-circle-check text-emerald"></i> Generated Interactive JavaScript State</div>
+                            <div class="ai-status-item file-step transparent-step" id="step-u"><i class="fa-solid fa-circle-check text-emerald"></i> Created Preview Routing Target</div>
+                        </div>
+                        <div class="preview-url-box transparent-step" id="step-box">
+                            <span class="lbl-pv">Preview URL:</span>
+                            <span class="url-pv" onclick="openWindow('cursor-win')">portfolio.workspace.webos.app</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input-wrapper">
+                    <input type="text" placeholder="Instruct WebOS infrastructure..." disabled>
+                    <button class="chat-send"><i class="fa-solid fa-arrow-up"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div id="task-manager" class="window window-sm" style="top: 35%; left: 35%;">
+            <div class="window-header" onmousedown="dragStart(event, 'task-manager')">
+                <div class="window-controls">
+                    <span class="control close" onclick="closeWindow('task-manager')"></span>
+                    <span class="control minimize" onclick="closeWindow('task-manager')"></span>
+                    <span class="control maximize"></span>
+                </div>
+                <div class="window-title"><i class="fa-solid fa-gauge-high text-emerald"></i> Telemetry Task Monitor</div>
+            </div>
+            <div class="window-body telemetry-layout">
+                <div class="telemetry-row">
+                    <div class="telemetry-meta">
+                        <span class="tel-label">CPU Core Usage</span>
+                        <span class="tel-value" id="val-cpu">35%</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar bar-cpu" id="bar-cpu" style="width: 35%;"></div>
+                    </div>
+                </div>
+                <div class="telemetry-row">
+                    <div class="telemetry-meta">
+                        <span class="tel-label">RAM Allocation</span>
+                        <span class="tel-value" id="val-ram">72%</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar bar-ram" id="bar-ram" style="width: 72%;"></div>
+                    </div>
+                </div>
+                <div class="telemetry-row">
+                    <div class="telemetry-meta">
+                        <span class="tel-label">NVMe Flash Capacity</span>
+                        <span class="tel-value" id="val-storage">48%</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar bar-storage" id="bar-storage" style="width: 48%;"></div>
+                    </div>
+                </div>
+                <div class="telemetry-row">
+                    <div class="telemetry-meta">
+                        <span class="tel-label">Edge Ingress Bandwidth</span>
+                        <span class="tel-value" id="val-net">14.2 Mbps</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar bar-network" id="bar-net" style="width: 58%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal-overlay" id="modal-domain">
+            <div class="modal-card-window">
+                <div class="modal-header">
+                    <h3><i class="fa-solid fa-globe text-cyan"></i> Connect Custom Domain</h3>
+                    <button class="modal-close-btn" onclick="closeDomainModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="domain-modal-content-primary">
+                    <p class="modal-description">Enter your apex domain or subdomain. WebOS will automatically provisioning Anycast routing tables and an edge SSL handshake certificate.</p>
+                    <div class="form-group">
+                        <label for="domain-input-field">Domain Identifier</label>
+                        <input type="text" id="domain-input-field" class="form-control" placeholder="myportfolio.com">
+                    </div>
+                    <div class="modal-actions-footer">
+                        <button class="btn btn-secondary" onclick="closeDomainModal()">Cancel</button>
+                        <button class="btn btn-primary" onclick="processDomainProvisioning()">Connect Domain</button>
+                    </div>
+                </div>
+                <div class="modal-body hidden-step" id="domain-modal-content-loading">
+                    <div class="spinner-container">
+                        <div class="ios-spinner"></div>
+                        <p class="loading-status-text" id="domain-loading-text">Requesting orchestration tokens...</p>
+                    </div>
+                    <ul class="deployment-timeline-steps">
+                        <li class="timeline-step pending" id="d-step-1"><i class="fa-solid fa-circle-notch fa-spin step-icon-spin"></i> Instantiating SSL handshakes</li>
+                        <li class="timeline-step pending" id="d-step-2"><i class="fa-solid fa-circle text-muted"></i> Configuring distributed DNS context</li>
+                        <li class="timeline-step pending" id="d-step-3"><i class="fa-solid fa-circle text-muted"></i> Broadcast target live confirmation</li>
+                    </ul>
+                </div>
+                <div class="modal-body hidden-step" id="domain-modal-content-success">
+                    <div class="success-banner">
+                        <div class="success-icon-badge"><i class="fa-solid fa-circle-check"></i></div>
+                        <h4>Domain Secured &amp; Active</h4>
+                        <a href="https://myportfolio.com" target="_blank" class="live-domain-link" id="final-domain-anchor">https://myportfolio.com</a>
+                    </div>
+                    <div class="modal-actions-footer">
+                        <button class="btn btn-primary btn-full" onclick="closeDomainModal()">Return to Desktop</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="modal-publish">
+            <div class="modal-card-window">
+                <div class="modal-header">
+                    <h3><i class="fa-solid fa-rocket text-purple"></i> Vercel Edge Pipeline Deployment</h3>
+                    <button class="modal-close-btn" onclick="closePublishModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="publish-modal-content-primary">
+                    <div class="project-identity-row">
+                        <div class="proj-icon"><i class="fa-solid fa-folder text-amber"></i></div>
+                        <div>
+                            <h4 id="publish-project-name">Portfolio Website</h4>
+                            <p class="sub-meta">Production branch configuration</p>
+                        </div>
+                    </div>
+                    <div class="form-group margin-top-md">
+                        <label>Target Deployment Domain</label>
+                        <div class="radio-option-card active-radio">
+                            <input type="radio" name="pub-target" id="rad-1" checked>
+                            <label for="rad-1">
+                                <strong>myportfolio.com</strong>
+                                <span class="radio-desc">Primary production vanity custom routing domain</span>
+                            </label>
+                        </div>
+                        <div class="radio-option-card">
+                            <input type="radio" name="pub-target" id="rad-2">
+                            <label for="rad-2">
+                                <strong>Dynamic Development Subdomain</strong>
+                                <span class="radio-desc">portfolio.workspace.webos.app</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-actions-footer">
+                        <button class="btn btn-secondary" onclick="closePublishModal()">Cancel</button>
+                        <button class="btn btn-glow" onclick="executeProductionDeployment()">Publish Project</button>
+                    </div>
+                </div>
+                <div class="modal-body hidden-step" id="publish-modal-content-loading">
+                    <div class="spinner-container">
+                        <div class="ios-spinner"></div>
+                        <p class="loading-status-text" id="publish-loading-text">Initializing production compilation build...</p>
+                    </div>
+                    <ul class="deployment-timeline-steps">
+                        <li class="timeline-step pending" id="p-step-1"><i class="fa-solid fa-circle-notch fa-spin step-icon-spin"></i> Building micro-frontend bundle</li>
+                        <li class="timeline-step pending" id="p-step-2"><i class="fa-solid fa-circle text-muted"></i> Optimizing asset compression graphs</li>
+                        <li class="timeline-step pending" id="p-step-3"><i class="fa-solid fa-circle text-muted"></i> Configuring edge secure sockets layer (SSL)</li>
+                        <li class="timeline-step pending" id="p-step-4"><i class="fa-solid fa-circle text-muted"></i> Updating DNS global Anycast clusters</li>
+                        <li class="timeline-step pending" id="p-step-5"><i class="fa-solid fa-circle text-muted"></i> Going Live verification status</li>
+                    </ul>
+                </div>
+                <div class="modal-body hidden-step" id="publish-modal-content-success">
+                    <div class="success-banner font-center">
+                        <div class="celebration-emojis">🎉</div>
+                        <h3>Your project is live!</h3>
+                        <p class="success-description-p">Application payload compiled successfully and distributed across 42 global edge datacenters.</p>
+                        <a href="https://myportfolio.com" target="_blank" class="live-domain-link large-link" id="final-publish-anchor">https://myportfolio.com</a>
+                    </div>
+                    <div class="modal-actions-footer">
+                        <button class="btn btn-primary btn-full" onclick="closePublishModal()">Excellent</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <footer class="dock-container">
+            <div class="dock-blur-background"></div>
+            <div class="dock-shelf">
+                <div class="dock-icon-item" tooltip="Finder Dashboard" onclick="openWindow('projects-win')">
+                    <i class="fa-solid fa-compass dock-fnd"></i>
+                    <span class="dock-dot"></span>
+                </div>
+                <div class="dock-icon-item" tooltip="Projects" onclick="openWindow('projects-win')">
+                    <i class="fa-solid fa-folder-closed dock-prj"></i>
+                    <span class="dock-dot"></span>
+                </div>
+                <div class="dock-icon-item" tooltip="Domains" onclick="openWindow('domains-win')">
+                    <i class="fa-solid fa-globe dock-dom"></i>
+                    <span class="dock-dot"></span>
+                </div>
+                <div class="dock-icon-item" tooltip="Cursor IDE" onclick="openWindow('cursor-win')">
+                    <i class="fa-solid fa-code dock-ide"></i>
+                    <span class="dock-dot"></span>
+                </div>
+                <div class="dock-icon-item" tooltip="Applications" onclick="openWindow('apps-win')">
+                    <i class="fa-solid fa-box-open dock-app"></i>
+                    <span class="dock-dot"></span>
+                </div>
+                <div class="dock-icon-item" tooltip="AI Assistant" onclick="openWindow('ai-win')">
+                    <i class="fa-solid fa-robot dock-ai"></i>
+                    <span class="dock-dot"></span>
+                </div>
+                <div class="dock-icon-item" tooltip="Task Manager" onclick="openWindow('task-manager')">
+                    <i class="fa-solid fa-gauge-high dock-tsk"></i>
+                    <span class="dock-dot"></span>
+                </div>
+                <div class="dock-divider"></div>
+                <div class="dock-icon-item" tooltip="System Settings">
+                    <i class="fa-solid fa-sliders dock-set"></i>
+                    <span class="dock-dot"></span>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

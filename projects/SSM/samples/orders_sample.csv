@@ -1,0 +1,26 @@
+order_id,customer_name,customer_phone,customer_email,restaurant,restaurant_id,delivery_partner,status,eta,eta_shown_min,actual_delivery_min,delay_min,amount,order_date,is_peak_hour,weather,is_first_order
+SWG-1001,Rahul Sharma,9876543210,rahul@example.com,Pizza Hub,REST-001,Rajesh K.,Delivered,30 min,30,32,2,450.00,2026-06-01,false,Clear,false
+SWG-1002,Meera Iyer,9123456780,meera@example.com,Biryani Palace,REST-002,Suresh M.,Delivered,25 min,25,38,13,680.00,2026-06-01,true,Clear,false
+SWG-1003,Kunal Verma,9988776655,kunal@example.com,Burger King,REST-003,Amit S.,Delivered,20 min,20,45,25,320.00,2026-06-02,false,Rain,true
+SWG-1004,Anjali Patil,9012345678,anjali@example.com,Sushi Express,REST-004,Vikram P.,Delivered,35 min,35,40,5,890.00,2026-06-02,true,Clear,false
+SWG-1005,Priya Singh,9876501234,priya@example.com,Taco Bell,REST-005,Rohit D.,Delivered,28 min,28,30,2,275.00,2026-06-03,false,Clear,true
+SWG-1006,Rahul Sharma,9876543210,rahul@example.com,Pizza Hub,REST-001,Rajesh K.,Delivered,30 min,30,55,25,520.00,2026-06-04,false,Heavy Rain,false
+SWG-1007,Meera Iyer,9123456780,meera@example.com,Biryani Palace,REST-002,Suresh M.,Delivered,25 min,25,28,3,710.00,2026-06-04,true,Clear,false
+SWG-1008,Arjun Nair,9123400001,arjun@example.com,Pizza Hub,REST-001,Dev P.,Delivered,30 min,30,48,18,430.00,2026-06-05,false,Clear,false
+SWG-1009,Sneha Rao,9123400002,sneha@example.com,Biryani Palace,REST-002,Kiran L.,Delivered,25 min,25,50,25,650.00,2026-06-05,true,Rain,false
+SWG-1010,Vikram Shah,9123400003,vikram@example.com,Burger King,REST-003,Manoj T.,Delivered,20 min,20,22,2,340.00,2026-06-06,false,Clear,true
+SWG-1011,Deepa Menon,9123400004,deepa@example.com,Sushi Express,REST-004,Anil K.,Delivered,35 min,35,58,23,920.00,2026-06-06,true,Heavy Rain,false
+SWG-1012,Rahul Sharma,9876543210,rahul@example.com,Pizza Hub,REST-001,Rajesh K.,Delivered,30 min,30,33,3,480.00,2026-06-07,false,Clear,false
+SWG-1013,First User A,9111111111,firsta@example.com,Taco Bell,REST-005,Rohit D.,Delivered,28 min,28,50,22,290.00,2026-06-07,false,Rain,true
+SWG-1014,First User B,9111111112,firstb@example.com,Pizza Hub,REST-001,Rajesh K.,Delivered,30 min,30,52,22,410.00,2026-06-08,true,Clear,true
+SWG-1015,VIP Customer,9111111113,vip@example.com,Biryani Palace,REST-002,Suresh M.,Delivered,25 min,25,27,2,1200.00,2026-06-08,false,Clear,false
+SWG-1016,Repeat Complainer,9111111114,complainer@example.com,Burger King,REST-003,Amit S.,Delivered,20 min,20,42,22,350.00,2026-06-09,false,Clear,false
+SWG-1017,Repeat Complainer,9111111114,complainer@example.com,Burger King,REST-003,Amit S.,Delivered,20 min,20,44,24,360.00,2026-06-09,true,Clear,false
+SWG-1018,Kunal Verma,9988776655,kunal@example.com,Sushi Express,REST-004,Vikram P.,Delivered,35 min,35,37,2,870.00,2026-06-09,false,Clear,false
+SWG-1019,Anjali Patil,9012345678,anjali@example.com,Pizza Hub,REST-001,Rajesh K.,Delivered,30 min,30,46,16,460.00,2026-06-10,true,Clear,false
+SWG-1020,Priya Singh,9876501234,priya@example.com,Taco Bell,REST-005,Rohit D.,Delivered,28 min,28,31,3,280.00,2026-06-10,false,Clear,false
+SWG-1021,Meera Iyer,9123456780,meera@example.com,Biryani Palace,REST-002,Suresh M.,Delivered,25 min,25,26,1,690.00,2026-06-10,false,Clear,false
+SWG-1022,Arjun Nair,9123400001,arjun@example.com,Burger King,REST-003,Dev P.,Delivered,20 min,20,35,15,330.00,2026-06-10,true,Rain,false
+SWG-1023,Sneha Rao,9123400002,sneha@example.com,Sushi Express,REST-004,Kiran L.,Delivered,35 min,35,60,25,950.00,2026-06-10,false,Heavy Rain,false
+SWG-1024,Vikram Shah,9123400003,vikram@example.com,Pizza Hub,REST-001,Manoj T.,Delivered,30 min,30,34,4,440.00,2026-06-10,false,Clear,false
+SWG-1025,Deepa Menon,9123400004,deepa@example.com,Taco Bell,REST-005,Anil K.,Delivered,28 min,28,29,1,300.00,2026-06-10,false,Clear,false
